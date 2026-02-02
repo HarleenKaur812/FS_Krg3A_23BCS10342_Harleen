@@ -6,6 +6,7 @@ const Header = ({ title }) => {
       <header
         style={{
           padding: "1rem",
+          width: "100%",
           backgroundColor: "#2ecc71",
           color: "white",
           textAlign: "center",
