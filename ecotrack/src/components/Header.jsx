@@ -1,64 +1,120 @@
-import { Link } from "react-router-dom";
+import { memo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Button,
+  Container,
+} from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import HistoryIcon from "@mui/icons-material/History";
+import LoginIcon from "@mui/icons-material/Login";
 
-const Header = ({ title }) => {
+const Header = memo(({ title }) => {
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = useCallback(() => {
+    setIsAuthenticated(false);
+    navigate("/login");
+  }, [setIsAuthenticated, navigate]);
+
+  const handleDashboard = useCallback(() => {
+    navigate("/");
+  }, [navigate]);
+
+  const handleLogs = useCallback(() => {
+    navigate("/logs");
+  }, [navigate]);
+
+  const handleLogin = useCallback(() => {
+    navigate("/login");
+  }, [navigate]);
+
   return (
-    <>
-      <header
-        style={{
-          padding: "1rem",
-          width: "100%",
-          backgroundColor: "#2ecc71",
-          color: "white",
-          textAlign: "center",
-        }}
-      >
-        <h2>{title}</h2>
-        <nav>
-          <Link
-            to="/"
-            style={{
-              marginRight: "1rem",
-              color: "white",
-              textDecoration: "none",
+    <AppBar position="static" sx={{ backgroundColor: "#2ecc71" }}>
+      <Container maxWidth="lg">
+        <Toolbar disableGutters>
+          <Typography
+            variant="h6"
+            sx={{
+              flexGrow: 1,
+              fontWeight: 600,
+              letterSpacing: 1,
             }}
           >
-            Dashboard
-          </Link>
-          <Link
-            to="/logs"
-            style={{
-              marginRight: "1rem",
-              color: "white",
-              textDecoration: "none",
-            }}
-          >
-            Logs
-          </Link>
-          <Link
-            to="/"
-            style={{
-              marginRight: "1rem",
-              color: "white",
-              textDecoration: "none",
-            }}
-          >
-            Login
-          </Link>
-          <Link
-            to="/"
-            style={{
-              marginRight: "1rem",
-              color: "red",
-              textDecoration: "none",
-            }}
-          >
-            Logout
-          </Link>
-          
-        </nav>
-      </header>
-    </>
+            {title}
+          </Typography>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            {isAuthenticated && (
+              <>
+                <Button
+                  color="inherit"
+                  startIcon={<DashboardIcon />}
+                  onClick={handleDashboard}
+                  sx={{
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    },
+                  }}
+                >
+                  Dashboard
+                </Button>
+                <Button
+                  color="inherit"
+                  startIcon={<HistoryIcon />}
+                  onClick={handleLogs}
+                  sx={{
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    },
+                  }}
+                >
+                  Logs
+                </Button>
+                <Button
+                  color="inherit"
+                  startIcon={<LogoutIcon />}
+                  onClick={handleLogout}
+                  sx={{
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    },
+                  }}
+                >
+                  Logout
+                </Button>
+              </>
+            )}
+            {!isAuthenticated && (
+              <Button
+                color="inherit"
+                startIcon={<LoginIcon />}
+                onClick={handleLogin}
+                sx={{
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.15)",
+                  },
+                }}
+              >
+                Login
+              </Button>
+            )}
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
-};
+});
+
+Header.displayName = "Header";
 
 export default Header;

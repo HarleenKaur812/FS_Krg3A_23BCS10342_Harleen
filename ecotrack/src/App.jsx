@@ -1,32 +1,65 @@
 
-import {BrowserRouter,Routes,Route,Navigate} from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header.jsx";
-import Dashboard from "./pages/dashboard.jsx";
-import Logs from "./pages/Logs.jsx";
-import Login from "./pages/Login.jsx";
 import ProtectedRoutes from "./routes/ProtectedRoutes.jsx";
-import DashboardLayout from "./pages/DashboardLayout.jsx";
-import DashboardAnalytics from "./pages/DashboardAnalytics.jsx";
-import DashboardSummary from "./pages/DashboardSummary.jsx";
+import { Box, CircularProgress } from "@mui/material";
+
+// Lazy load page components for code splitting
+const Login = lazy(() => import("./pages/Login.jsx"));
+const DashboardLayout = lazy(() => import("./pages/DashboardLayout.jsx"));
+const DashboardSummary = lazy(() =>
+  import("./pages/DashboardSummary.jsx")
+);
+const DashboardAnalytics = lazy(() =>
+  import("./pages/DashboardAnalytics.jsx")
+);
+const Logs = lazy(() => import("./pages/Logs.jsx"));
+
+// Loading component for Suspense fallback
+const LoadingFallback = () => (
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "60vh",
+    }}
+  >
+    <CircularProgress />
+  </Box>
+);
 
 function App() {
   return (
     <BrowserRouter>
-      <Header title="Ecotrack"/>
-      <Routes>
-        <Route path="/" element={<Navigate to="/Login"/>}/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/" element={
-          <ProtectedRoutes>
-            <DashboardLayout/>
-          </ProtectedRoutes>
-        }>
-          <Route index element={<DashboardSummary/>}/>
-          <Route path="summary" element={<DashboardSummary/>}/>
-          <Route path="analytics" element={<DashboardAnalytics/>}/>
-          <Route path="logs" element={<ProtectedRoutes> <Logs/></ProtectedRoutes>}/>
-        </Route>
-      </Routes>
+      <Header title="EcoTrack" />
+      <Suspense fallback={<LoadingFallback />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoutes>
+                <DashboardLayout />
+              </ProtectedRoutes>
+            }
+          >
+            <Route index element={<DashboardSummary />} />
+            <Route path="summary" element={<DashboardSummary />} />
+            <Route path="analytics" element={<DashboardAnalytics />} />
+          </Route>
+          <Route
+            path="/logs"
+            element={
+              <ProtectedRoutes>
+                <Logs />
+              </ProtectedRoutes>
+            }
+          />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
