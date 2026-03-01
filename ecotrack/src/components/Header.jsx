@@ -67,6 +67,19 @@ const Header = memo(({ title }) => {
                 </Button>
                 <Button
                   color="inherit"
+                  startIcon={<DashboardIcon />}
+                  onClick={() => navigate('/dashboard/water')}
+                  sx={{
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    },
+                  }}
+                >
+                  Water Tracker
+                </Button>
+                <Button
+                  color="inherit"
                   startIcon={<HistoryIcon />}
                   onClick={handleLogs}
                   sx={{

@@ -1,5 +1,5 @@
-import { memo, useCallback, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { memo, useCallback, useState, useEffect } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import {
   Container,
   Box,
@@ -14,10 +14,22 @@ import AnalyticsIcon from "@mui/icons-material/Analytics";
 
 const DashboardLayout = memo(() => {
   const [activeTab, setActiveTab] = useState(0);
+  const location = useLocation();
 
   const handleTabChange = useCallback((event, newValue) => {
     setActiveTab(newValue);
   }, []);
+
+  // keep tab in sync with the current path
+  useEffect(() => {
+    if (location.pathname.endsWith("/water")) {
+      setActiveTab(2);
+    } else if (location.pathname.endsWith("/analytics")) {
+      setActiveTab(1);
+    } else {
+      setActiveTab(0);
+    }
+  }, [location]);
 
   return (
     <Container maxWidth="lg" sx={{ paddingY: 4 }}>
@@ -58,6 +70,17 @@ const DashboardLayout = memo(() => {
                 label="Analytics"
                 component={Link}
                 to="analytics"
+                sx={{
+                  textTransform: "none",
+                  fontSize: 16,
+                }}
+              />
+              <Tab
+                icon={<DashboardIcon />}
+                iconPosition="start"
+                label="Water Tracker"
+                component={Link}
+                to="water"
                 sx={{
                   textTransform: "none",
                   fontSize: 16,

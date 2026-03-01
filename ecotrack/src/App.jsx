@@ -15,6 +15,7 @@ const DashboardAnalytics = lazy(() =>
   import("./pages/DashboardAnalytics.jsx")
 );
 const Logs = lazy(() => import("./pages/Logs.jsx"));
+const WaterTracker = lazy(() => import("./pages/WaterTracker.jsx"));
 
 // Loading component for Suspense fallback
 const LoadingFallback = () => (
@@ -49,6 +50,7 @@ function App() {
             <Route index element={<DashboardSummary />} />
             <Route path="summary" element={<DashboardSummary />} />
             <Route path="analytics" element={<DashboardAnalytics />} />
+            <Route path="water" element={<WaterTracker />} />
           </Route>
           <Route
             path="/logs"
