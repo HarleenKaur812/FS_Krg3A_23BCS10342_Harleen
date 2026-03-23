@@ -1,12 +1,12 @@
 package com.healthhub.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.healthhub.model.Patient;
 import com.healthhub.repository.PatientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PatientService {
@@ -28,7 +28,6 @@ public class PatientService {
     }
 
     public Patient updatePatient(Long id, Patient newPatient) {
-
         Patient patient = getPatient(id);
 
         patient.setName(newPatient.getName());
@@ -40,5 +39,21 @@ public class PatientService {
 
     public void deletePatient(Long id) {
         repository.deleteById(id);
+    }
+
+    // JPQL
+    public List<Patient> findPatientsAboveAge(int age) {
+        return repository.findPatientsAboveAge(age);
+    }
+
+    // Pagination
+    public Page<Patient> getPatientsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findAll(pageable);
+    }
+
+    // Fetch optimization
+    public List<Patient> getPatientsWithRecords() {
+        return repository.findAllWithRecords();
     }
 }

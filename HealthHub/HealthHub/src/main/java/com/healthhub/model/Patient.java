@@ -1,8 +1,10 @@
 package com.healthhub.model;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
+@Table(name = "patients")
 public class Patient {
 
     @Id
@@ -10,8 +12,16 @@ public class Patient {
     private Long id;
 
     private String name;
+
+    @Column(unique = true)
     private String email;
+
     private int age;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<HealthRecord> records;
+
+    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -43,5 +53,13 @@ public class Patient {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public List<HealthRecord> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<HealthRecord> records) {
+        this.records = records;
     }
 }
